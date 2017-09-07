@@ -12,16 +12,16 @@ done
 URI="https://cloud.docker.com/api/app/v1/$NAMESPACE"
 
 # Get the STACKURI
-STACKURI=`curl -s -H "Authorization: Basic $DOCKERCLOUD_AUTH" -XGET "$URI/stack/" --data-urlencode "name=$SERVICE" | jq '.objects[] | .resource_uri ' | tr -d '\"'`
+STACKURI=`curl -s -H "Authorization: Basic $DOCKERCLOUD_AUTH" -XGET "$URI/stack/" --data-urlencode "name=$SERVICE" | jq  --raw-output '.objects[] | .resource_uri '`
 echo -e "\nStack URI\n $STACKURI"
 
 # Get the SERVICE URI matching SERVICE and STACKURI
-SERVICEURI=`curl -s -H "Authorization: Basic $DOCKERCLOUD_AUTH" -XGET "$URI/service/" --data-urlencode "name=$SERVICE" --data-urlencode "stack=$STACKURI" | jq '.objects[] | .resource_uri'| tr -d '\"'`
+SERVICEURI=`curl -s -H "Authorization: Basic $DOCKERCLOUD_AUTH" -XGET "$URI/service/" --data-urlencode "name=$SERVICE" --data-urlencode "stack=$STACKURI" | jq --raw-output '.objects[] | .resource_uri'`
 echo -e "\nService URI\n $SERVICEURI"
 
 # Get Nodes URIs for containers associated with the SERVICEURI
 declare -a NODEURIS
-NODEURIS=`curl -s -H "Authorization: Basic $DOCKERCLOUD_AUTH" -XGET "$URI/container/?limit=1" --data-urlencode "service=$SERVICEURI" | jq '.objects[] | .node' | tr -d '\"' | sort | uniq`
+NODEURIS=`curl -s -H "Authorization: Basic $DOCKERCLOUD_AUTH" -XGET "$URI/container/?limit=1" --data-urlencode "service=$SERVICEURI" | jq --raw-output '.objects[] | .node' | sort | uniq`
 echo -e "\nNode URIs"
 printf '%s\n' "${NODEURIS[@]}"
 
@@ -46,7 +46,7 @@ echo -e "\nAWS Node IDs"
 printf '%s\n' "${AWSIDS[@]}"
 
 declare -a EXISTINGIDS
-EXISTINGIDS=`aws elbv2 describe-target-health --target-group-arn $ARN --region $REGION| jq '.TargetHealthDescriptions[] | .Target.Id' | tr -d '\"'`
+EXISTINGIDS=`aws elbv2 describe-target-health --target-group-arn $ARN --region $REGION| jq --raw-output '.TargetHealthDescriptions[] | .Target.Id'`
 
 # Compare AWSIDS and EXISTINGIDS, create ADDID array of IDs to add, and REMOVEID of IDs to remove
 declare -A COMPARE
