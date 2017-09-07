@@ -83,7 +83,7 @@ done
 
 # Remove AWS IDs to 
 echo -e "\nRemoving IDs"
-printf '%s\n' "${REMOVE[@]}"
+printf '%s\n' "${REMOVEID[@]}"
 for ID in ${REMOVEID[@]}; do
   aws elbv2 deregister-targets --target-group-arn $ARN --targets Id=$ID,Port=$PORT --region $REGION
 done
