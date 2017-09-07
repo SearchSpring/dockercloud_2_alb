@@ -12,7 +12,7 @@ done
 URI="https://cloud.docker.com/api/app/v1/$NAMESPACE"
 
 # Get the STACKURI
-STACKURI=`curl -s -H "Authorization: $DOCKERCLOUD_AUTH" -XGET "$URI/stack/" -G --data-urlencode "name=$SERVICE" | jq  --raw-output '.objects[] | .resource_uri '`
+STACKURI=`curl -s -H "Authorization: $DOCKERCLOUD_AUTH" -XGET "$URI/stack/" -G --data-urlencode "name=$STACK" | jq  --raw-output '.objects[] | .resource_uri '`
 echo -e "\nStack URI\n $STACKURI"
 
 # Get the SERVICE URI matching SERVICE and STACKURI
