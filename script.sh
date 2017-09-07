@@ -47,6 +47,8 @@ printf '%s\n' "${AWSIDS[@]}"
 
 declare -a EXISTINGIDS
 EXISTINGIDS=`aws elbv2 describe-target-health --target-group-arn $ARN --region $REGION| jq --raw-output '.TargetHealthDescriptions[] | .Target.Id'`
+echo -e "\nExisting IDs"
+printf '%s\n' "${EXISTINGIDS[@]}"
 
 # Compare AWSIDS and EXISTINGIDS, create ADDID array of IDs to add, and REMOVEID of IDs to remove
 declare -A COMPARE
@@ -60,7 +62,9 @@ declare -a ADDID
 declare -a REMOVEID
 i=0
 n=0
+echo -e "Comparing IDs\n"
 for ID in ${!COMPARE[@]}; do
+  echo "$ID : ${COMAPRE[$ID]}"
   if [ ${COMPARE[$ID]} = 1 ]; then
     REMOVEID[$i]=$ID
     i=$(($i + 1))
