@@ -64,7 +64,7 @@ i=0
 n=0
 echo -e "Comparing IDs\n"
 for ID in ${!COMPARE[@]}; do
-  echo "$ID : ${COMAPRE[$ID]}"
+  echo "$ID : $COMAPARE[$ID]"
   if [ ${COMPARE[$ID]} = 1 ]; then
     REMOVEID[$i]=$ID
     i=$(($i + 1))
