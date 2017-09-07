@@ -1,8 +1,8 @@
 #!/bin/bash
 
-declare -a MANDITORY
-MANDITORY=("DOCKERCLOUD_AUTH" "SERVICE" "STACK" "PORT" "ARN" )
-for V in ${MANDITORY[@]}; do
+declare -a MANDATORY
+MANDITORY=("DOCKERCLOUD_AUTH" "SERVICE" "PORT" "ARN" )
+for V in ${MANDATORY[@]}; do
   if [ -z "${!V}" ]; then
     echo -e "Failed to define $V"
     exit 1
@@ -12,16 +12,16 @@ done
 URI="https://cloud.docker.com/api/app/v1/$NAMESPACE"
 
 # Get the STACKURI
-STACKURI=`curl -s -H "Authorization: Basic $DOCKERCLOUD_AUTH" -XGET "$URI/stack/" -G --data-urlencode "name=$SERVICE" | jq  --raw-output '.objects[] | .resource_uri '`
+STACKURI=`curl -s -H "Authorization: $DOCKERCLOUD_AUTH" -XGET "$URI/stack/" -G --data-urlencode "name=$SERVICE" | jq  --raw-output '.objects[] | .resource_uri '`
 echo -e "\nStack URI\n $STACKURI"
 
 # Get the SERVICE URI matching SERVICE and STACKURI
-SERVICEURI=`curl -s -H "Authorization: Basic $DOCKERCLOUD_AUTH" -XGET "$URI/service/" -G --data-urlencode "name=$SERVICE" --data-urlencode "stack=$STACKURI" | jq --raw-output '.objects[] | .resource_uri'`
+SERVICEURI=`curl -s -H "Authorization: $DOCKERCLOUD_AUTH" -XGET "$URI/service/" -G --data-urlencode "name=$SERVICE" --data-urlencode "stack=$STACKURI" | jq --raw-output '.objects[] | .resource_uri'`
 echo -e "\nService URI\n $SERVICEURI"
 
 # Get Nodes URIs for containers associated with the SERVICEURI
 declare -a NODEURIS
-NODEURIS=`curl -s -H "Authorization: Basic $DOCKERCLOUD_AUTH" -XGET "$URI/container/?limit=1" -G --data-urlencode "service=$SERVICEURI" | jq --raw-output '.objects[] | .node' | sort | uniq`
+NODEURIS=`curl -s -H "Authorization: $DOCKERCLOUD_AUTH" -XGET "$URI/container/?limit=1" -G --data-urlencode "service=$SERVICEURI" | jq --raw-output '.objects[] | .node' | sort | uniq`
 echo -e "\nNode URIs"
 printf '%s\n' "${NODEURIS[@]}"
 
