@@ -64,13 +64,13 @@ i=0
 n=0
 echo -e "Comparing IDs\n"
 for ID in ${!COMPARE[@]}; do
-  echo "$ID : ${COMPARE[$ID]}"
+  echo "$ID : ${CO  MPARE[$ID]}"
   if [ ${COMPARE[$ID]} = 1 ]; then
     REMOVEID[$i]=$ID
     i=$(($i + 1))
   elif [ ${COMPARE[$ID]} = 2 ]; then
     ADDID[$n]=$ID
-    n=$(($i + 1))
+    n=$(($n + 1))
   fi
 done
 
