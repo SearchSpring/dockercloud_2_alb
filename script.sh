@@ -21,7 +21,7 @@ echo -e "\nService URI\n $SERVICEURI"
 
 # Get Nodes URIs for containers associated with the SERVICEURI
 declare -a NODEURIS
-NODEURIS=`curl -s -H "Authorization: $DOCKERCLOUD_AUTH" -XGET "$URI/container/?limit=1" -G --data-urlencode "service=$SERVICEURI" | jq --raw-output '.objects[] | .node' | sort | uniq`
+NODEURIS=`curl -s -H "Authorization: $DOCKERCLOUD_AUTH" -XGET "$URI/container/" -G --data-urlencode "service=$SERVICEURI" | jq --raw-output '.objects[] | .node' | sort | uniq`
 echo -e "\nNode URIs"
 printf '%s\n' "${NODEURIS[@]}"
 
